@@ -1,14 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player_Movement : MonoBehaviour
+public class player_movement : MonoBehaviour
 {
     // Camera Attributes
     private Camera mainCamera;
 
     // Player Attributes
     private Rigidbody2D rb;
-    public float moveSpeed = 7f;
+    public float moveSpeed = 4f;
     private Vector2 moveDirection;
     public Animator anim;
 
@@ -19,7 +19,7 @@ public class Player_Movement : MonoBehaviour
 
     // Teleportation Cooldown Attributes
     private bool isTeleportOnCooldown = false;
-    private float teleportCooldownTime = 1.5f; // Cooldown time in seconds
+    private float teleportCooldownTime = 1f; // Cooldown time in seconds
     private float teleportCooldownTimer = 0f;
     public Slider cooldownSlider;
 
@@ -69,6 +69,12 @@ public class Player_Movement : MonoBehaviour
             AttemptTeleport();
         }
 
+        // Right-click to attack
+        if (Input.GetMouseButtonDown(1) && !isTeleportOnCooldown)
+        {
+        AttemptAttack();
+        }
+
         MovePlayer();
         anim.SetBool("isMoving", moveDirection != Vector2.zero);
 
@@ -94,6 +100,23 @@ public class Player_Movement : MonoBehaviour
         rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
     }
 
+    void AttemptAttack()
+    {
+        Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition.z = 0f;
+
+        RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
+
+        if (hit.collider != null && hit.collider.CompareTag("Enemy"))
+        {
+            transform.position = hit.collider.transform.position; // Teleport to the slime
+            slime_health slimeHealth = hit.collider.GetComponent<slime_health>();
+            if (slimeHealth != null)
+            {
+                slimeHealth.TakeDamage(1); // Deal damage
+            }
+        }
+    }
     void AttemptTeleport()
     {
         // Convert mouse position to world position
