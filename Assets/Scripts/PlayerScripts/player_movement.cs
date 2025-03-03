@@ -96,7 +96,6 @@ public class player_movement : MonoBehaviour
 =======
 		MovePlayer();
 		anim.SetBool("isMoving", moveDirection != Vector2.zero);
->>>>>>> 23f166721afabd028b16d284b2448ccd22377d23
 
 		// Handle teleport cooldown
 		if (isTeleportOnCooldown)
@@ -152,8 +151,7 @@ public class player_movement : MonoBehaviour
 		Vector3 targetPosition =
 			mainCamera.ScreenToWorldPoint(Input.mousePosition);
 		targetPosition.z = 0f;
->>>>>>> 23f166721afabd028b16d284b2448ccd22377d23
-
+		
 		// Check if clicking on a barrier
 		RaycastHit2D hit = Physics2D.Raycast(targetPosition, Vector2.zero,
 			Mathf.Infinity, barrierLayer);
